@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+<!-- 맨 윗 extends 태그는 무조건 스크립트 최상단에 있어야 실행된다. -->
+{% load forum_filter %}
+
+<!-- [질문 클릭시 보여지는 상세페이지] -->
+
+<!-- style.css, 부트스트랩 추가 후 코드 -->
+<!-- 질문, 답변은 하나의 뭉치에 해당되므로 부트스트랩의 card 컴포넌트를 사용 -->
+<!-- 질문/답변 내용은 white-space: pre-line을 적용하여 텍스트의 줄바꿈이 잘 보이게 -->
+
+<!-- 표준 HTML 구조화 전 -->
+<!--{% load static %}-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">-->
+
+<!-- 표준 HTML 구조화 후 -->
+{% block content %}
+<div class="container my-3">
+    <!-- 사용자오류 표시 - 수정권한이 없습니다 라는 오류. 질문상세화면 위쪽 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <h2 class="border-bottom py-2">{{ question.subject }}</h2>
+    <div class="row my-3">
+        <!-- 질문 추천 -->
+        <div class="col-1">
+            <div class="bg-light text-center p-3 border font-weight-bolder mb-1">{{question.voter.count}}</div>
+            <a href="#" data-uri="{% url 'forum:vote_question' question.id  %}"
+               class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+        </div>
+        <!-- 질문 -->
+        <div class="col-11">
+            <div class="card">
+                <div class="card-body">
+                    <!-- 마크다운 적용 -->
+                    <div class="card-text">{{ question.content|mark }}</div>
+                    <div class="d-flex justify-content-end">
+                        <!-- 수정일시 추가 -->
+                        {% if question.modify_date %}
+                        <div class="badge badge-light p-2 text-left mx-3">
+                            <div class="mb-2">modified at</div>
+                            <div>{{ question.modify_date }}</div>
+                        </div>
+                        {% endif %}
+                        <!-- 질문 상세 페이지 글쓴이 추가 -->
+                        <div class="badge badge-light p-2 text-left">
+                            <div class="mb-2">{{ question.author.username }}</div>
+                            <div>{{ question.create_date }}</div>
+                        </div>
+                    </div>
+                    <!-- 로그인한 사용자만 볼 수 있도록. -->
+                    {% if request.user == question.author %}
+                    <div class="my-3">
+                        <!-- 질문 수정 버튼 추가 -->
+                        <a href="{% url 'forum:question_modify' question.id  %}"
+                           class="btn btn-sm btn-outline-secondary">수정</a>
+                        <!-- 질문 삭제 버튼 추가 -->
+                        <a href="#" class="delete btn btn-sm btn-outline-secondary"
+                           data-uri="{% url 'forum:question_delete' question.id  %}">삭제</a>
+                    </div>
+                    {% endif %}
+                    <!-- 질문 댓글 -->
+                    {% if question.comment_set.count > 0 %}
+                    <div class="mt-3">
+                    {% for comment in question.comment_set.all %}
+                        <!-- 댓글 앵커 엘리먼트 추가 -->
+                        <a name="comment_{{ comment.id }}"></a>
+                        <div class="comment py-2 text-muted">
+                            <span style="white-space: pre-line;">{{ comment.content }}</span>
+                            <span>
+                                - {{ comment.author }}, {{ comment.create_date }}
+                                {% if comment.modify_date %}
+                                (수정:{{ comment.modify_date }})
+                                {% endif %}
+                            </span>
+                            {% if request.user == comment.author %}
+                            <a href="{% url 'forum:comment_modify_question' comment.id  %}" class="small">수정</a>,
+                            <a href="#" class="small delete"
+                               data-uri="{% url 'forum:comment_delete_question' comment.id  %}">삭제</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'forum:comment_create_question' question.id  %}"
+                           class="small"><small>댓글 추가 ..</small></a>
+                    </div>
+                    <!-- 질문 댓글 End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5 class="border-bottom my-3 py-2">{{question.answer_set.count}}개의 답변이 있습니다.</h5>
+    {% for answer in question.answer_set.all %}
+    <!-- 답변 등록, 수정시 앵커기능 추가 - 앵커 엘리먼트 추가 -->
+    <!-- name 속성은 유일해야 한다 - answer.id 사용. -->
+    <a name="answer_{{ answer.id }}"></a>
+    <div class="row my-3">
+        <!-- 답변 추천 -->
+        <div class="col-1">
+            <div class="bg-light text-center p-3 border font-weight-bolder mb-1">{{answer.voter.count}}</div>
+            <a href="#" data-uri="{% url 'forum:vote_answer' answer.id  %}"
+                class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+        </div>
+        <!-- 답변 -->
+        <div class="col-11">
+            <div class="card">
+                <div class="card-body">
+                    <!-- 마크다운 적용 -->
+                    <div class="card-text">{{ answer.content|mark }}</div>
+                    <div class="d-flex justify-content-end">
+                        <!-- 수정 일시 추가 -->
+                        {% if answer.modify_date %}
+                        <div class="badge badge-light p-2 text-left mx-3">
+                            <div class="mb-2">modified at</div>
+                            <div>{{ answer.modify_date }}</div>
+                        </div>
+                        {% endif %}
+                        <!-- 답변에 글쓴이 추가 -->
+                        <div class="badge badge-light p-2 text-left">
+                            <div class="mb-2">{{ answer.author.username }}</div>
+                            <div>{{ answer.create_date }}</div>
+                        </div>
+                    </div>
+                    <!-- 답변 수정, 삭제 버튼 추가 -->
+                    {% if request.user == answer.author %}
+                    <div class="my-3">
+                        <a href="{% url 'forum:answer_modify' answer.id  %}"
+                           class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a href="#" class="delete btn btn-sm btn-outline-secondary "
+                           data-uri="{% url 'forum:answer_delete' answer.id  %}">삭제</a>
+                    </div>
+                    {% endif %}
+                    <!-- 답변댓글 추가 -->
+                    {% if answer.comment_set.count > 0 %}
+                    <div class="mt-3">
+                    {% for comment in answer.comment_set.all %}
+                        <!-- 댓글 앵커 엘리먼트 추가 -->
+                        <a name="comment_{{ comment.id }}"></a>
+                        <div class="comment py-2 text-muted">
+                            <span style="white-space: pre-line;">{{ comment.content }}</span>
+                            <span>
+                                - {{ comment.author }}, {{ comment.create_date }}
+                                {% if comment.modify_date %}
+                                (수정:{{ comment.modify_date }})
+                                {% endif %}
+                            </span>
+                            {% if request.user == comment.author %}
+                            <a href="{% url 'forum:comment_modify_answer' comment.id  %}" class="small">수정</a>,
+                            <a href="#" class="small delete"
+                               data-uri="{% url 'forum:comment_delete_answer' comment.id  %}">삭제</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'forum:comment_create_answer' answer.id  %}"
+                           class="small"><small>댓글 추가 ..</small></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <form action="{% url 'forum:answer_create' question.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <!-- 질문상세템플릿 오류 표시 -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <!--<textarea name="content" id="content" class="form-control" rows="10"></textarea>-->
+            <!-- 로그인 상태가 아닐 경우, 입력을 못하도록. -->
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+              name="content" id="content" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="답변등록" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+
+<!-- 자바스크립트 삭제 알림 창, 추천 버튼 기능 추가-->
+<!-- 추천 버튼에 class="recommend"가 적용되어 있어서 해당 값을 찾아주는 제이쿼리를 이용함 -->
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+    $(".recommend").on('click', function() {
+        if(confirm("정말로 추천하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
+<!-- 부트스트랩 추가 전 코드 -->
+<!--&lt;!&ndash;-->
+<!--render 함수가 question_detail.html 파일을 사용하고 있으므로 작업해야한다.-->
+<!--question.subject 과 question.content 는 detail 함수에서 render 함수에 전달한 context 데이터.-->
+<!-- -&ndash;&gt;-->
+<!--<h1>{{ question.subject }}</h1>-->
+
+<!--<div>-->
+<!--    {{ question.content }}-->
+<!--</div>-->
+
+<!--&lt;!&ndash; 등록된 답변 표시 - question.answer_set.count 은 답변 개수 &ndash;&gt;-->
+<!--<h5>{{ question.answer_set.count }}개의 답변이 있습니다.</h5>-->
+<!--<div>-->
+<!--    <ul>-->
+<!--    {% for answer in question.answer_set.all %}-->
+<!--        <li>{{ answer.content }}</li>-->
+<!--    {% endfor %}-->
+<!--    </ul>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; 답변등록 버튼 추가 &ndash;&gt;-->
+<!--<form action="{% url 'forum:answer_create' question.id %}" method="post">-->
+<!--&lt;!&ndash; 전송된 데이터(답변)가 실제로 웹 브라우저에서 작성된 데이터인지 판단하는 검사기 역할. 윗라인과 같이 세트로 항상입력해야함 &ndash;&gt;-->
+<!--{% csrf_token %}-->
+<!--<textarea name="content" id="content" rows="15"></textarea>-->
+<!--<input type="submit" value="답변등록">-->
+<!--</form>-->

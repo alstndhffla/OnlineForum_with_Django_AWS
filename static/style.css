@@ -1,0 +1,22 @@
+/*
+부트스트랩을 사용하면서 추가적인 스타일을 위해 사용할 것들만 남겨놓을 예정
+*/
+
+/*
+답변등록시 사용하는 textarea 100% , 답변등록 버튼 위쪽 margin 10px 추가했다
+*/
+/*
+textarea {
+    width:100%;
+}
+
+input[type=submit] {
+    margin-top:10px;
+}
+*/
+
+/* 댓글 comment 클래스의 css */
+.comment {
+    border-top:dotted 1px #ddd;
+    font-size:0.7em;
+}

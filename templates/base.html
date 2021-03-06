@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <!-- forum CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Forum</title>
+</head>
+<body>
+
+<!-- 장고 - 템플릿 특정 위치에 파일을 삽입하는 include 기능 -->
+{% include "navbar.html" %}
+
+<!-- 기본 템플릿 안에 삽입될 내용 -->
+{% block content %}
+{% endblock %}
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+<!-- jQuery JS -->
+<script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+<!-- Bootstrap JS -->
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+<!-- 자바스크립트 - jQuery 실행을 위해 -->
+{% block script %}
+{% endblock %}
+<!-- 자바스크립트 End -->
+</body>
+</html>
+
+<!--
+HTML 표준구조는 body 엘리먼트 바깥 부분은 모두 같은 내용으로 중복된다.
+그리고 CSS 파일 이름이 변경되거나 새로운 CSS 파일이 추가되면
+head 엘리먼트의 내용을 수정하려고 템플릿 파일을 일일이 찾아다녀야 하는 불편함도 있다.
+이를 위해 장고는 템플릿 상속(extends) 기능을 제공한다.
+
+<!doctype html> 위에 빨간 줄 떠도 괜찮.
+-->

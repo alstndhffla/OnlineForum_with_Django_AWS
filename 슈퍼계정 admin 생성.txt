@@ -1,0 +1,6 @@
+명령 프롬프트에서 python manage.py createsuperuser 명령을 실행하여 슈퍼 유저를 생성
+admin / admin@misite.com / 1234
+
+서버 가동 후 아래 주소를 입력하면 관리자 정보를 입력할 수 있다.
+http://localhost:8000/admin/
+(인증 및 권한을 줄 수 있는 관리를 할 수 있음)

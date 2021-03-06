@@ -1,0 +1,115 @@
+
+- 장고 ORM을 이용해 데이터베이스를 제어
+
+- 부트스트랩, 제이쿼리, 자바스크립트 등 사용
+
+- 상용게시판 수준
+마크다운
+로그인/로그아웃
+회원가입
+게시물 수정삭제
+검색, 정렬
+좋아요 기능
+네비게이션 바 
+게시물 수정삭제
+게시판 페이징
+스크롤 초기화(앵커엘리먼트)
+
+-------------------------------------------------------------------------------
+
+- 깃으로 소스 관리
+- AWS 라이트세일로 서비스 배포
+	인스턴스 생성 - 리눅스(우분투20.04LTS) - Ubuntn-1	
+
+------------------------------------------------------------------------------
+- AWS 서버 관리 (ubuntu@ip-172-26-14-116:~$ 프롬프트에서 '~'는 홈 디렉터리인 /home/ubuntu를 의미)
+
+****서비스에 필요한 설정, 서버 실행
+
+1. date 입력시 현재 서버의 시각이 호출
+2. 한국 시간으로 서버 시간 수정
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+3. python 입력으로 설치되어있는지 확인 -> 이후 python3 입력하면 
+파이썬 셸이 실행됨 '>>>' 나타남. -> exit() 로 종료
+4. 가상환경 설정 패키지 설치 전 sudo apt update 입력으로 우분투 패키지 최신화
+5. 가상환경 사용할 수 있도록 sudo apt install python3-venv 입력.
+6. 홈 디렉터리 하위에 projects, venvs 디렉터리 생성
+	mkdir projects
+	mkdir venvs
+	ls	(홈 하위에 있는 디렉터리 확인 명령어)
+7. cd venvs 입력 (venvs 디렉터리로 이동해 장고 가상 환경을 생성하기 위함)
+	이후 python3 -m venv mysite 입력(가상환경 생성)
+	이후 cd mysite 입력(가상환경으로 진입)
+	*** (/home/ubuntu/venvs/mysite/bin 이동 후 '. activate' 을 입력하면 가상환경으로 진입할 수 있다.)
+	cd bin 입력
+	. activate 입력
+8. 가상환경 진입 완료 상태 확인
+	(mysite) ubuntu@ip-172-26-14-116:~/venvs/mysite/bin$
+
+9. wheel 패키지를 먼저 설치 - 서버환경에서 pip 으로 프로젝트 관련 패키지 설치시 해당
+	패키지 관련 오류 발생함.
+	pip install wheel 입력
+	(mysite) ubuntu@ip-172-26-14-116:~/venvs/mysite/bin$ pip install wheel
+
+10. django 에 필요한 패키지 2개 설치	
+	pip install django==3.1.3
+	pip install markdown
+
+11. 깃허브 저장소를 가져오기 위해 projects 디렉터리로 이동(원격 저장소의 파일 받기)
+	(mysite) ubuntu@ip-172-26-14-116:~/venvs/mysite/bin$ cd ~/projects
+
+12. https://github.com/alstndhffla/OnlineForum_with_Django_AWS.git(깃헙 주소)
+	(mysite) ubuntu@ip-172-26-14-116:~/projects$ git clone 깃헙 주소 mysite
+	*mysite 를 뒤에 꼭 입력해줘야 해당 이름으로 폴더가 생성되며 그 안에 파일들이
+	 들어간다
+
+13. (mysite) ubuntu@ip-172-26-14-116:~/projects$ ls 입력해 mysite 디렉터리가 생성됐
+	는지 확인한다.
+
+14. mysite 디렉터리에 진입해 장고 서버를 실행.
+	(mysite) ubuntu@ip-172-26-14-116:~/projects$ cd mysite
+	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ python manage.py runserver
+
+15. 장고 서버는 실행되도 python manage.py migrate 명령을 수행하라는 메시지를 볼 수도
+	 있다. ctrl+c 로 서버를 종료하고 해당 명령어를 입력해 apply 시킨 후 다시
+	서버를 실행시켜라.
+	 
+**** 고정 IP 생성(포럼에 접속하려면 필요함)
+1. 네트워킹 탭 - 고정 IP 생성 - 인스턴스에 연결(ex. Ubuntu-1) - 생성
+	15.165.254.222 (퍼블릭 고정 IP 주소가 생성됨)
+
+**** 방화벽 설정(외부에서 접근하려면 해제해줘야한다)
+1. 인스턴스에서 해당 서버(Ubuntu-1) 클릭.
+2. 네트워킹 탭 - 아래 IPv6 방화벽 섹터에 '규칙추가' 클릭
+3. forum 서버는 포트번호 8000번이므로 포트 또는 범위에 8000 입력 후 '생성' 클릭
+4. 장고서버 다시 구동 (ex. cd .. 직전 경로가기)
+	ubuntu@ip-172-26-14-116:~$ cd ~/venvs/mysite/bin
+	ubuntu@ip-172-26-14-116:~/venvs/mysite/bin$ . activate
+	(mysite) ubuntu@ip-172-26-14-116:~/venvs/mysite$ cd ~/projects/mysite
+	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$
+
+	**** 장고 서버가 종료되지 않은 상태에서 터미널이 종료되었으면 이미 실행중인
+	 장고 서버 프로세스를 종료해야한다.
+	killall python 입력. ****
+	
+	그리고 python manage.py runserver 0:8000 입력
+
+-------------------------------------------------------------------------------
+부트스트랩 4.5.3 버전 다운로드: getbootstrap.com/docs/4.5/getting-started/download 사용. 버전5 x
+파일의 압축을 해제 후, 이 중에서 bootstrap.min.css 파일만 복사해 mysite/static 디렉터리에 저장.
+
+부트스트랩에 필요한 파일 추가 - 제이쿼리
+C:/projects/mysite/static/jquery-3.6.0.min.js
+
+
+
+cmd 에서 
+'mysite' 입력하면 장고 가상환경으로 자동 연결
+
+
+ - 모델이 변경되면 항상 아래 작업들을 해줘야 한다.
+콜렉터 작업이 끝나면 cmd 에서
+(mysite) c:\projects\mysite>python manage.py makemigrations 후
+Select an option: 1 보고 >>> 1을 입력.
+(mysite) c:\projects\mysite>python manage.py migrate 끝.
+
