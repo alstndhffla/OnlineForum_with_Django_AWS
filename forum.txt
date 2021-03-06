@@ -111,6 +111,40 @@ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 	python manage.py runserver 0:8000 입력.
 
 7. 이후 누구든지 3.34.54.66:8000 을 주소창에 넣으면 forum 에 접속할 수 있다.(고정 IP + 포트번호)
+
+
+8. 서버와 개발환경을 분리
+서버의 고정 아이피를 setting.py 에 등록했기 때문에 이제 기존 localhost:8000 로는 접속할 수 가 없다.
+그래서 setting.py을 구분해줘야 한다.
+settings이라는 폴더에 base.py 와 local.py, prod.py 로 나누어 사용한다.
+
+(mysite) c:\projects\mysite>python manage.py runserver --settings=config.settings.local
+이렇게 입력해야 개발환경에서 기존 로컬서버를 사용할 수 있음.
+**** 개발환경 자동화 DJANGO_SETTINGS_MODULE
+	set DJANGO_SETTINGS_MODULE=config.settings.local 입력
+	python manage.py runserver  기존처럼 입력해 사용할 수 있음.
+	
+	**** 장고의 가상환경이 설치된 venvs 폴더 안 배치파일 C:\venvs\mysite.cmd 수정 
+		set DJANGO_SETTINGS_MODULE=config.settings.local 입력하면 기존 환경변수와 맞물려
+		개발환경에서 set DJANGO_SETTINGS_MODULE=config.settings.local 를 입력할 필요조차
+		없다.
+
+AWS 서버 환경에서는
+python manage.py runserver --settings=config.settings.prod 를 입력해야 한다.
+**** 로컬 개발환경의 파일들이 바꼈으니 git 으로 추가하고 AWS 에서 다시 받아야 한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
 -------------------------------------------------------------------------------
 부트스트랩 4.5.3 버전 다운로드: getbootstrap.com/docs/4.5/getting-started/download 사용. 버전5 x
 파일의 압축을 해제 후, 이 중에서 bootstrap.min.css 파일만 복사해 mysite/static 디렉터리에 저장.

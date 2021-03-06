@@ -13,7 +13,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+"""
+서버의 고정 아이피를 setting.py(base.py) 에 등록했기 때문에 이제 기존 localhost:8000 로는 접속할 수 가 없다.
+그래서 구분해줘야 한다.
+기존 settings.py 파일의 위치는 C:/projects/mysite/config인데 
+base.py 파일의 위치는 C:/projects/mysite/config/settings로 디렉터리가 더 깊어졌기 때문에 
+.parent를 한 번 더 사용하여 BASE_DIR을 설정
+"""
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
