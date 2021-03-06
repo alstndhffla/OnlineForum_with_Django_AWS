@@ -26,9 +26,9 @@ SECRET_KEY = 'n62=fck*$qyh7*o95y8#pb1mo5oh#ki-*!@af60=fq4!=s$%)f'
 DEBUG = True
 
 """
-외부에 서비스하려면 AWS 에 받은 고정 IP 를 입력해야 한다.
+외부에 서비스하려면 AWS 에 받은 고정 IP 를 아래에 입력해야 한다.
 """
-ALLOWED_HOSTS = ['15.165.254.222']
+ALLOWED_HOSTS = ['3.36.147.181']
 
 
 # Application definition

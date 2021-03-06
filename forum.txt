@@ -30,7 +30,7 @@
 2. 한국 시간으로 서버 시간 수정
 sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 3. python 입력으로 설치되어있는지 확인 -> 이후 python3 입력하면 
-파이썬 셸이 실행됨 '>>>' 나타남. -> exit() 로 종료
+파이썬 셸이 실행되면서 '>>>' 나타남(파이썬이 정상적으로 설치되었다는 의미) -> exit() 로 종료
 4. 가상환경 설정 패키지 설치 전 sudo apt update 입력으로 우분투 패키지 최신화
 5. 가상환경 사용할 수 있도록 sudo apt install python3-venv 입력.
 6. 홈 디렉터리 하위에 projects, venvs 디렉터리 생성
@@ -71,12 +71,12 @@ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ python manage.py runserver
 
 15. 장고 서버는 실행되도 python manage.py migrate 명령을 수행하라는 메시지를 볼 수도
-	 있다. ctrl+c 로 서버를 종료하고 해당 명령어를 입력해 apply 시킨 후 다시
+	 있다. ctrl+c 로 서버를 종료하고 위 명령어를 입력해 apply 시킨 후 다시
 	서버를 실행시켜라.
 	 
 **** 고정 IP 생성(포럼에 접속하려면 필요함)
 1. 네트워킹 탭 - 고정 IP 생성 - 인스턴스에 연결(ex. Ubuntu-1) - 생성
-	15.165.254.222 (퍼블릭 고정 IP 주소가 생성됨)
+	3.36.147.181 (퍼블릭 고정 IP 주소가 생성됨)
 
 **** 방화벽 설정(외부에서 접근하려면 해제해줘야한다)
 1. 인스턴스에서 해당 서버(Ubuntu-1) 클릭.
