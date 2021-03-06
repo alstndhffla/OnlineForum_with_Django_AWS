@@ -44,13 +44,13 @@ def index(request):
     # 조회
     if kw:
         question_list = question_list.filter(
-            # 제목 검색
+            # 제목
             Q(subject__icontains=kw) |
-            # 내용 검색
+            # 내용
             Q(content__icontains=kw) |
-            # 질문 글쓴이 검색
+            # 질문 글쓴이
             Q(author__username__icontains=kw) |
-            # 답변 글쓴이 검색
+            # 답변 글쓴이
             Q(answer__author__username__icontains=kw)
         ).distinct()
 
@@ -66,8 +66,8 @@ def index(request):
 
     # render 함수는 context에 있는 Question 모델 데이터 question_list를 forum/question_list.html 파일에
     # 적용하여 HTML 코드로 변환한다. 장고에서는 이런 파일(forum/question_list.html)을 템플릿이라 한다.
-    return render(request, 'forum\question_list.html', context)
-    return HttpResponse("안녕. 질의응답 게시판 방문을 환영해.")
+    return render(request, 'forum/question_list.html', context)
+    # return HttpResponse("안녕. 게시판 방문을 환영해.")
 
 
 def detail(request, question_id):
