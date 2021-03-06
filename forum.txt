@@ -131,7 +131,24 @@ settings이라는 폴더에 base.py 와 local.py, prod.py 로 나누어 사용�
 
 AWS 서버 환경에서는
 python manage.py runserver --settings=config.settings.prod 를 입력해야 한다.
-**** 로컬 개발환경의 파일들이 바꼈으니 git 으로 추가하고 AWS 에서 다시 받아야 한다.
+**** 로컬 개발환경의 파일들이 바꼈으니 git 으로 추가하고 AWS 서버에서 다시 받아야 한다.
+	**** 서버 설정 자동화
+		개발환경의 mysite.cmd 활용처럼 mysite.sh 파일을 작성해 가상환경진입과 환경변수설정을
+		자동화할 수 있다(nano 편집기)
+		cd /home/ubuntu/venvs/
+		nano mysite.sh 입력 후 뜬 화면에서
+		
+
+		#!/bin/bash
+
+		cd ~/projects/mysite
+		export DJANGO_SETTINGS_MODULE=config.settings.prod
+		. ~/venvs/mysite/bin/activate
+
+
+		위 4줄 전체를 입력 후 ctrl+o 로 저장한 뒤 ctrl+x 로 편집기를 종료.
+		이후 AWS 터미널 환경에서 . mysite.sh 를 입력하면 해당 환경을 인식하고 가상환경을 연결해준다.
+		(mysite) ubuntu@ip-172-26-11-59:~/projects/mysite$  이렇게 뜸.
 
 
 
