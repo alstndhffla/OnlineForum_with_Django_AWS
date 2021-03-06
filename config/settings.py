@@ -28,7 +28,7 @@ DEBUG = True
 """
 외부에 서비스하려면 AWS 에 받은 고정 IP 를 아래에 입력해야 한다.
 """
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.34.54.66']
 
 
 # Application definition
