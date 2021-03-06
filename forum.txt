@@ -108,7 +108,7 @@ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 	(mysite) ubuntu@ip-172-26-14-223:~/projects/mysite$ git pull 를 입력.
 	
 	이후 다시 AWS 터미널에서 서버 실행.
-	python manage.py runserver 입력.
+	python manage.py runserver 0:8000 입력.
 
 7. 이후 누구든지 3.34.54.66:8000 을 주소창에 넣으면 forum 에 접속할 수 있다.(고정 IP + 포트번호)
 -------------------------------------------------------------------------------
