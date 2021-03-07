@@ -1,5 +1,25 @@
 -------------------------------------------------------------------------------
 
+서버 프로그래밍 언어
+Python 3
+프레임워크
+Django
+데이터베이스
+PostgreSQL
+프론트엔드
+JQuery
+Bootstrap 4
+OS
+Ubuntu
+웹서버
+Nginx
+WSGI 서버
+Gunicorn
+호스팅
+AWS-Lightsail
+
+-------------------------------------------------------------------------------
+
 - 명령 프롬프트에서 'mysite' 입력하면 장고 가상환경으로 자동 연결(배치파일 환경변수 등록함)
 
 - 부트스트랩 4.5.3 버전 다운로드: getbootstrap.com/docs/4.5/getting-started/download 사용. 버전5 x
@@ -191,11 +211,14 @@ AWS 라이트세일 터미널이 자주 끊기는 것 같아 불편. 그래서 �
 
 **** Gunicorn 설치(운영을 위한 도구이므로 AWS 서버에만 설치하면 된다)
 	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ pip install gunicorn
-	이후 gunicorn --bind 0:8000 config.wsgi:application 입력(서버 실행명령어)
+	이후 gunicorn --bind 0:8000 config.wsgi:application 입력(서버 실행명령어) -> URL 에 http://3.34.54.66:8000/ 입력시 forum 접속가능
+
+	****
 	(해당 명령어의 의미는 8000번 포트로 WSGI 서버를 수행, 
 	WSGI 서버가 호출하는 WSGI 애플리케이션이 config/wsgi.py 파일의 application 이라는 의미다.)	
 	(해당 명령어로 서버가 실행이 안된다면 sudo fuser -k 8000/tcp 다시 입력해  8000 사용을 죽이고
 	재입력하면 서버가 실행된다.)	
+	****
 		
 	이후 URL(http://3.34.54.66:8000/forum/)을 입력해 forum에 들어가보면 기존에 정적파일들이 
 	적용되어있지 않은 상태로 보일 것이다. 이는 Gunicorn 은 정적파일을 제대로 읽지 못하기 때문이다.
@@ -204,14 +227,123 @@ AWS 라이트세일 터미널이 자주 끊기는 것 같아 불편. 그래서 �
 	현재 Forum 의 서버는 Unix 계열의 시스템(우분투)이기 때문에 포트(8000)를 이용하는 것보다
 	유닉스 소켓(Unix socket)을 사용하는 것이 더 빠르며 효율적이다.	
 	gunicorn --bind unix:/tmp/gunicorn.sock config.wsgi:application 입력.
+
 	*****************
-	유닉스 소켓 방식으로 Gunicorn 서버를 실행하면 단독으로 Gunicorn 서버에 접속하여 실행할 수 없다. 
-	유닉스 소켓 방식으로 실행한 Gunicorn 서버는 Nginx와 같은 웹 서버에서 유닉스 소켓으로 
-	WSGI 서버에 접속하도록 설정해야 한다.
+	유닉스 소켓 방식으로 Gunicorn 서버를 실행하면 단독으로 Gunicorn 서버에 접속/실행할 수 없다. 
+	해당 Gunicorn 서버는 Nginx와 같은 웹 서버에서 유닉스 소켓으로 WSGI 서버에 접속하도록 설정해야 한다.
 	*****************
 	
 	Gunicorn을 자동으로 실행(시작, 중지)하기 위해서 AWS 서버에 서비스로 등록(환경변수, 서비스파일 작성)
 	서버에서 nano 편집기를 이용하여 작성한다.
+	*환경 변수 파일 
+	/home/ubuntu/venvs/mysite.env - 파일내용 : DJANGO_SETTINGS_MODULE=config.settings.prod
+	*서비스 파일
+	sudo nano mysite.service 입력 후 아래 내용을 등록해 저장한다.
+	
+	[Unit]
+	Description=gunicorn daemon
+	After=network.target
+
+	[Service]
+	User=ubuntu
+	Group=ubuntu
+	WorkingDirectory=/home/ubuntu/projects/mysite
+	EnvironmentFile=/home/ubuntu/venvs/mysite.env
+	ExecStart=/home/ubuntu/venvs/mysite/bin/gunicorn \
+	        --workers 2 \
+	        --bind unix:/tmp/gunicorn.sock \
+	        config.wsgi:application
+	[Install]
+	WantedBy=multi-user.target
+	
+	*서비스 실행 및 등록
+	(mysite) ubuntu@ip-172-26-14-116:/etc/systemd/system$ sudo systemctl start mysite.service
+	입력 후
+	
+	sudo systemctl status mysite.service 입력했을 시
+	아래와 같은 메시지가 나와야 실행된거다.
+
+	● mysite.service - gunicorn daemon
+	   Loaded: loaded (/etc/systemd/system/mysite.service; disabled; vendor preset: enabled)
+	   Active: active (running) since Thu 2020-04-23 12:12:27 UTC; 1s ago
+	 Main PID: 26513 (gunicorn)
+	    Tasks: 3 (limit: 547)
+	   CGroup: /system.slice/mysite.service
+	           ├─26513 /home/ubuntu/venvs/mysite/bin/python3 /home/ubuntu/venvs/mysite/bin/gunicorn --workers 2 --bind unix:/tmp/gunicorn.sock config.wsgi:application
+	           ├─26534 /home/ubuntu/venvs/mysite/bin/python3 /home/ubuntu/venvs/mysite/bin/gunicorn --workers 2 --bind unix:/tmp/gunicorn.sock config.wsgi:application
+	           └─26536 /home/ubuntu/venvs/mysite/bin/python3 /home/ubuntu/venvs/mysite/bin/gunicorn --workers 2 --bind unix:/tmp/gunicorn.sock config.wsgi:application
+
+	* AWS 서버가 재시작시 Gunicorn 자동실행 설정
+	sudo systemctl enable mysite.service (자동실행) -> 이걸 입력하면 된다.
+	sudo systemctl stop mysite.service (종료)
+	sudo systemctl restart mysite.service	(서비스 재시작)
+
+**** AWS 서버에 Nginx 사용법.
+1. 설치
+	~/projects/mysite$ sudo apt install nginx 입력
+2. 설정(cd /etc/nginx/sites-available 이동)
+	sudo nano mysite 입력 - Nginx의 설정 파일을 mysite라는 이름으로 아래와 같이 작성 
+	
+	server {
+	        listen 80;
+	        server_name 3.34.54.66;
+
+	        location = /favicon.ico { access_log off; log_not_found off; }
+
+	        location /static {
+	                alias /home/ubuntu/projects/mysite/static;
+	        }
+
+	        location / {
+            	    include proxy_params;
+	                proxy_pass http://unix:/tmp/gunicorn.sock;
+	        }
+	}
+
+	****
+	http 프로토콜 기본 포트 80, 내 서버 고정 ip 3.34.54.66, /static 은 Nginx 가 해당 디렉터리의 파일을 읽어
+	처리한다는 뜻.
+	location / 은 static 외에 모든 요청은 Gunicorn이 처리한다는 동적 요청 설정. proxy_pass 는 Gunicorn의
+	유닉스 소켓 경로.
+	****
+
+3. Nginx 위에 설정한 mysite 파일 읽도록 설정
+	(mysite) ubuntu@ip-172-26-14-116:/etc/nginx/sites-available$ cd /etc/nginx/sites-enabled/ 입력.
+	ls 입력 후 default 파일 있는지 확인.
+	sudo rm default 입력 - mysite 파일 링크를 위해 default 링크를 삭제 
+	sudo ln -s /etc/nginx/sites-available/mysite 입력 - mysite 파일 링크
+
+4. Nginx 다시 시작(pip 으로 설치할 때 자동실행되므로 설정을 새롭게 했으니 재시작해줘야 한다.)
+	(mysite) ubuntu@ip-172-26-14-116:/etc/nginx/sites-enabled$ sudo systemctl restart nginx 입력
+
+	****
+	sudo nginx -t	(설정 파일 오류 확인 명령어)
+	sudo systemctl stop nginx (종료)
+	sudo systemctl start nginx (시작)
+	****	
+
+5. Gunicorn 과 Nginx 설치를 다 했기 때문에 url에 포트 번호(8000) 없이도 http://3.34.54.66/ 만으로 forum 에 
+	접속할 수 있다.
+
+-------------------------------------------------------------------------------
+
+- 장고 Admin(서버용)
+(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ python manage.py createsuperuser 입력
+이름: admin
+비밀번호: admin
+
+
+장고에 내장된 개발 서버는 장고 Admin이 사용될 때 자동으로
+/home/ubuntu/venvs/mysite/lib/python3.6/site-packages/django/contrib/admin/static
+여기서 정적파일을 읽고
+
+Nginx는 /home/ubuntu/projects/mysite/static 여기서 정적파일을 읽는다.
+
+그래서 http://3.34.54.66/admin 입력 후 보이는 브라우저는 스타일깨져서 나타남.
+
+이를 해결하기 위해서는 장고 환경설정 파일에 STATIC_ROOT 디렉터리를 설정하고 
+관리자 앱의 정적 파일을 STATIC_ROOT 디렉터리로 복사해야한다.
+(C:\projects\mysite\config\settings\prod.py 와 base.py 를 확인)
 
 -------------------------------------------------------------------------------
 
