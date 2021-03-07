@@ -45,3 +45,6 @@ urlpatterns = [
     # settings.py 의 LOGIN_REDIRECT_URL
     path('', base_views.index, name='index'),
 ]
+
+# 서버 환경의 404 오류 페이지(404 오류 발생 시), page_not_found 함수가 호출되도록 함.
+handler404 = 'common.views.page_not_found'

@@ -25,3 +25,13 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
+
+
+# 404 페이지 발생시 사용될 함수
+def page_not_found(request, exception):
+    # exception 매개변수는 오류의 내용을 담고 있는 것.
+    """
+    404 Page not found
+    """
+    # 오류발생시 띄워주는 common/404.html 템플릿 파일을 작성
+    return render(request, 'common/404.html', {})
