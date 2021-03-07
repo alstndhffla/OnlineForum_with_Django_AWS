@@ -436,7 +436,20 @@ createdb forum --username=dbmasteruser -h ls-0f369f631f262ea24a2be84d4a0aca67d43
 3. 장고로 개발되었으므로 장고에서 PostgreSQL에 접속하는 데 필요한 psycopg2-binary 모듈이 필요
 pip install psycopg2-binary 입력.
 
-4. settings/prod.py 파일에 DATABASE 항목 설정
+4. settings/prod.py 파일에 DATABASE 항목 설정 (git push, pull 로 서버에 파일 적용)
+
+5. 서버의 데이터베이스가 변경되었기 때문에 적용시켜줘야함.
+	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ python manage.py migrate
+
+6. 슈퍼유저 생성.
+python manage.py createsuperuser 입력
+
+이름 : admin
+이메일 주소 :  admin@forum.kr
+비밀번호: admin
+
+7. 서버 재시작.
+sudo systemctl restart nginx 입력.
 
 -------------------------------------------------------------------------------
 
