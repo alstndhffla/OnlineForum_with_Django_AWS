@@ -31,7 +31,7 @@ STATICFILES_DIRS 리스트에 STATIC_ROOT와 동일한 디렉터리가 포함되
 STATICFILES_DIRS = []
 
 """
-장고는 실행 도중에 오류가 발생하면 DEBUG가 True인 경우 오류 내용을 화면에 상세하게 출력
-그러면 settings.py 파일과 urls.py 파일에 설정한 항목들이 노출된다. 이는 서버정보가 보인다는 뜻.
+장고는 실행 도중에 오류가 발생하면 DEBUG가 True인 경우, 오류 내용을 브라우저에 상세하게 출력.
+그러면 settings.py 파일 등애 설정 항목들이 노출된다(서버정보가 보인다)
 """
 DEBUG = False
