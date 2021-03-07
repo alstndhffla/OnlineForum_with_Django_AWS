@@ -172,3 +172,86 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+"""
+장고 로깅 : docs.djangoproject.com/en/3.0/topics/logging
+오류 표시를 위해 로그파일 등록 -> DEFAULT_LOGGING 설정
+아래 설정을 완료하고 서버에 logs 디렉터리를 반드시 생성해야 한다.
+-> (mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ mkdir logs
+그리고 logs 디렉터리는 버전 관리 대상이 아니므로 .gitignore 파일에 추가 -> logs
+"""
+LOGGING = {
+    # version은 고정값 1을 사용해야 한다
+    'version': 1,
+    # True로 설정하면 기존에 설정된 로거들을 사용하지 않게 된다. default 가 false
+    'disable_existing_loggers': False,
+    # DEBUG 항목의 True, False를 판단
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    # 로그를 출력할 형식 - 서버의 시간, 출력내용
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+        # 현재시간, 로그의 레벨, 로거명, 출력내용의 포맷터 추가
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
+    # 로그의 출력 방법
+    'handlers': {
+        # 콘솔에 로그를 출력
+        'console': {
+            'level': 'INFO',
+            # DEBUG=True일 때만 로그를 출력
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        # 개발 서버에서만 사용하는 핸들러로 콘솔에 로그를 출력
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        # 로그 내용을 이메일로 전송하는 핸들러
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'file': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            # 로그가 무한히 증가되더라도 일정 개수의 파일로 롤링(Rolling) - 로그 파일이 너무 커져서 디스크가 꽉 차는 위험을 방지
+            'class': 'logging.handlers.RotatingFileHandler',
+            # 로그 파일명은 logs 디렉터리에 mysite.log
+            'filename': BASE_DIR / 'logs/mysite.log',
+            # 로그파일크기 5 MB
+            'maxBytes': 1024*1024*5,
+            # 총 5개의 로그 파일(롤링되는 파일 갯수)
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        # 장고 프레임워크가 사용하는 로거, 로그 레벨이 INFO 이상일 경우에만 로그를 출력
+        'django': {
+            'handlers': ['console', 'mail_admins', 'file'],
+            'level': 'INFO',
+        },
+        # 개발 서버가 사용하는 로거
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
