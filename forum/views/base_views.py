@@ -10,6 +10,10 @@ from ..models import Question
 # 목록 정렬을 위해 Count 추가
 from django.db.models import Q, Count
 
+# forum 로거 생성(forum 에서 직접 로그를 출력하도록 설정 - 로그 파일에 로그를 출력하기 위해서 모듈추가)
+import logging
+logger = logging.getLogger('forum')
+
 
 # - index 함수의 매개변수 request 는 장고에 의해 자동으로 전달되는 HTTP 요청 객체이다.
 # - request 는 사용자가 전달한 데이터를 확인할 때 사용된다.
@@ -17,6 +21,7 @@ def index(request):
     """
     forum 목록
     """
+    logger.info("INFO 레벨로 출력")
 
     # 입력 파라미터 - 페이지, 검색어
     # GET 방식 요청 URL에서 page값을 가져올 때 사용 ex. localhost:8000/forum/?page=1

@@ -176,7 +176,7 @@ STATICFILES_DIRS = [
 """
 장고 로깅 : docs.djangoproject.com/en/3.0/topics/logging
 오류 표시를 위해 로그파일 등록 -> DEFAULT_LOGGING 설정
-아래 설정을 완료하고 서버에 logs 디렉터리를 반드시 생성해야 한다.
+아래 설정을 완료하고 서버/개발 환경 둘 다 logs 디렉터리를 반드시 생성해야 한다.
 -> (mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ mkdir logs
 그리고 logs 디렉터리는 버전 관리 대상이 아니므로 .gitignore 파일에 추가 -> logs
 """
@@ -252,6 +252,10 @@ LOGGING = {
             'handlers': ['django.server'],
             'level': 'INFO',
             'propagate': False,
+        },
+        'forum': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
         },
     }
 }

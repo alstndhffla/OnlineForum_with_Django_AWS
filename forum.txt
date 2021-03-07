@@ -368,7 +368,12 @@ Nginx는 /home/ubuntu/projects/mysite/static 여기서 정적파일을 읽는다
 -------------------------------------------------------------------------------
 
 - 로그파일 등록/설정 -> base.py 확인
+* 서버환경에서 로그확인하는 방법 
+(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ cd logs
+(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite/logs$ cat mysite.log
 
+cat 대신에 tail -f mysite.log를 주로 사용. 
+tail -f mysite.log를 실행하면 mysite.log 파일에 로그가 쌓일 때마다 로그의 내용이 자동으로 출력.
 
 
 -------------------------------------------------------------------------------
