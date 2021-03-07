@@ -35,3 +35,15 @@ STATICFILES_DIRS = []
 그러면 settings.py 파일 등애 설정 항목들이 노출된다(서버정보가 보인다)
 """
 DEBUG = False
+
+# 서버에 설치한 postgreSQL 에 접속하기 위해.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'forum',
+        'USER': 'dbmasteruser',
+        'PASSWORD': 'za5870za',
+        'HOST': 'ls-0f369f631f262ea24a2be84d4a0aca67d43ade26.czz5gkwznb9w.ap-northeast-2.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+}
