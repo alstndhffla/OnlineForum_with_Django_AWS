@@ -345,11 +345,31 @@ Nginx는 /home/ubuntu/projects/mysite/static 여기서 정적파일을 읽는다
 관리자 앱의 정적 파일을 STATIC_ROOT 디렉터리로 복사해야한다.
 (C:\projects\mysite\config\settings\prod.py 와 base.py 를 확인)
 
+* 서버의 프로그램이 변경됐을 땐 git pull 을 이용해 최신화 하고 Gunicorn 을 재시작해줘야 한다.
+	(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ sudo systemctl restart mysite.service
+
+		****
+		[개발 환경에서 프로그램이 변경된 경우]
+
+		git add *
+		git commit -m "수정내용 코멘트"
+		git push
+
+		[서버 환경에서 변경된 내용 적용]
+
+		git pull
+		sudo systemctl restart gunicorn.service
+		****
+
+서버환경으로 변경된 파일들을 받아왔으니 해당 파일들을 서버가 제대로 읽을 수 있도록 
+디렉터리에 복사해줘야 한다(정적 파일이 /home/ubuntu/projects/mysite/static 디렉터리로 복사될 것)
+(mysite) ubuntu@ip-172-26-14-116:~/projects/mysite$ python manage.py collectstatic
+
 -------------------------------------------------------------------------------
 
 
 
-
+-------------------------------------------------------------------------------
 
 ******* 서버에 올리기 전 개발시 주의사항.
 - 모델이 변경되면 항상 아래 작업들을 해줘야 한다.
@@ -358,3 +378,4 @@ Nginx는 /home/ubuntu/projects/mysite/static 여기서 정적파일을 읽는다
 Select an option: 1 보고 >>> 1을 입력.
 (mysite) c:\projects\mysite>python manage.py migrate 끝.
 
+-------------------------------------------------------------------------------
