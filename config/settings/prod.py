@@ -4,8 +4,8 @@ from .base import *
 """
 
 
-# AWS 서버 고정 ip 등록
-ALLOWED_HOSTS = ['3.34.54.66']
+# AWS 서버 고정 ip 등록, 가비아에서 구입한 도메인 'quantforum.kr' 추가
+ALLOWED_HOSTS = ['3.34.54.66', 'quantforum.kr']
 
 """
 장고에 내장된 개발 서버는 장고 Admin이 사용될 때 자동으로
