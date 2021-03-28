@@ -2,7 +2,7 @@
 * 시스템 트레이딩(퀀트) 정보를 공유하는 게시판
 
 # 개발환경
-* 프로그래밍 언어 - Python 3, JavaScript
+* 프로그래밍 언어 - Python 3, JavaScript, HTML, CSS
 * 프레임워크 - Django
 * 데이터베이스 - PostgreSQL
 * FE - JQuery, Bootstrap 4
