@@ -1,11 +1,11 @@
 # http://quantforum.kr/
-* 시스템 트레이딩(퀀트) 정보를 공유하는 게시판
+* 시스템 트레이딩(퀀트) 정보 공유 게시판
 
 # 개발환경
-* 프로그래밍 언어 - Python 3, JavaScript, HTML, CSS
+* 프로그래밍 언어 - Python 3.8
 * 프레임워크 - Django
 * 데이터베이스 - PostgreSQL
-* FE - JQuery, Bootstrap 4
+* FE - JavaScript, HTML, CSS, JQuery, Bootstrap 4
 * 웹서버 - Nginx
 * WSGI 서버 - Gunicorn
 * 호스팅 - AWS Lightsail
