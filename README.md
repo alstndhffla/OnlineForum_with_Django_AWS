@@ -21,3 +21,12 @@
 * 게시물 수정삭제
 * 게시판 페이징
 * 스크롤 초기화(앵커엘리먼트)
+
+# 사진
+![1](https://user-images.githubusercontent.com/55347692/113500575-00ec1800-955a-11eb-8ec5-499b8e69fbbd.PNG)
+![2](https://user-images.githubusercontent.com/55347692/113500577-0184ae80-955a-11eb-9ae7-5363e767b1e7.png)
+![3](https://user-images.githubusercontent.com/55347692/113500578-021d4500-955a-11eb-9dae-fd412715d91b.PNG)
+![4](https://user-images.githubusercontent.com/55347692/113500579-021d4500-955a-11eb-8bf2-8e574c2826dc.PNG)
+![5](https://user-images.githubusercontent.com/55347692/113500580-02b5db80-955a-11eb-9c59-5805b4c2fe9d.PNG)
+![7](https://user-images.githubusercontent.com/55347692/113500581-02b5db80-955a-11eb-8cb0-5acea866366a.PNG)
+![8](https://user-images.githubusercontent.com/55347692/113500582-034e7200-955a-11eb-8411-11f04b34f6e3.PNG)
